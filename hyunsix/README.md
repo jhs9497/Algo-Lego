@@ -62,3 +62,15 @@ print('빼자', sc)
 # 빼자 Counter({'l': 3, 'o': 2, 'h': 1, 'e': 1, ',': 1, ' ': 1, 'w': 1, 'r': 1, 'd': 1})
 ```
 
+
+
+## defaultdict란 ?
+
+A라는 딕셔너리를 선언하고 key값으로 접근했을 때 만약 A[key]가 처음 접근된 친구면 **KeyError**를 일으킨다! 그래서 특히 dict에 value값으로 리스트를 삼을때 리스트가 처음 추가되는지 아닌지 if / else로 분기처리를 해준다. defaultdict는 그러한 수고로움을 덜어준다. 처음 접근되는 key일지라도 기본적으로 제공되는 기본값이 존재하기 때문! 
+
+- defaultdict(list)
+  - 기본 값으로 빈 리스트 []를 제공 -> 처음 접근하는 key값이어도 A[key].append('블라블라') 가능!
+- defaultdict(int)
+  - 기본 값으로 숫자 0 제공
+- defaultdict(set)
+  - 기본 값으로 빈 set 제공

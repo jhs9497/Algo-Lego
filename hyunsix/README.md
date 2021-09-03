@@ -64,9 +64,15 @@ print('빼자', sc)
 
 
 
+
+
 ## defaultdict란 ?
 
 A라는 딕셔너리를 선언하고 key값으로 접근했을 때 만약 A[key]가 처음 접근된 친구면 **KeyError**를 일으킨다! 그래서 특히 dict에 value값으로 리스트를 삼을때 리스트가 처음 추가되는지 아닌지 if / else로 분기처리를 해준다. defaultdict는 그러한 수고로움을 덜어준다. 처음 접근되는 key일지라도 기본적으로 제공되는 기본값이 존재하기 때문! 
+
+```python
+from collections import defaultdict
+```
 
 - defaultdict(list)
   - 기본 값으로 빈 리스트 []를 제공 -> 처음 접근하는 key값이어도 A[key].append('블라블라') 가능!
@@ -74,3 +80,59 @@ A라는 딕셔너리를 선언하고 key값으로 접근했을 때 만약 A[key]
   - 기본 값으로 숫자 0 제공
 - defaultdict(set)
   - 기본 값으로 빈 set 제공
+
+
+
+
+
+## 플로이드-워셜 알고리즘
+
+- 모든 최단 경로를 구하는 알고리즘
+- 노드 간의 최단 경로를 입려겨한 2차원 행렬을 구성한다.
+- 경유지를 설정하고. 각 시행마다 새로운 경유지로 교체해가며, **기존의 출발->도착 경로**와 **출발->new경유지->도착의 경로**를 비교하여 더 짧은 경로를 선택한다.
+
+```python
+n = 6
+fares = [[4, 1, 10], [3, 5, 24], [5, 6, 2], [3, 1, 41], [5, 1, 24], [4, 6, 50], [2, 4, 66], [2, 3, 22], [1, 6, 25]]
+
+# n : 노드의 수 
+# fares : 출발, 도착, 요금의 정보가 주어진다고 했을 때
+
+INF = 1e10   # 충분히 큰 수
+
+# dist -> x에서 y로 가는 운임 나타내는 2차원 요금지도
+dist = [[INF for _ in range(n)] for _ in range(n)]
+
+# 나 자신 -> 나 자신으로 가는 경우 0으로 설정
+for i in range(n):
+    dist[i][i] = 0
+    
+# fares로 받은 운임 적용해주기
+for info in fares:
+    # 우린 인덱스를 0부터 쓰니깐 -1해주자
+    dist[info[0]-1][info[1]-1] = info[2]
+    # 양방향으로 적용
+    dist[info[1]-1][info[0]-1] = info[2]
+```
+
+##### 여기까지 적용하면 아래와 같은 2차원 요금지도 확인 가능
+
+![캡처1](%EC%BA%A1%EC%B2%982.PNG)
+
+```python
+# 플로이드-워셜 알고리즘 적용
+def floyd(dist, n):
+    # i->j로 가는 최단거리를 저장하려고 하는거임
+    # k라는 경유지를 두고 i에서 j로 갈때 i->k->j가 빠른지 현재의 i->j가 빠른지 비교
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                dist[i][j] = min(dist[i][k] + dist[k][j], dist[i][j])
+
+floyd(dist, n)
+```
+
+##### 그럼 아래와 같은 모든 경로의 최단거리 알 수 있는 요금지도 완성
+
+![캡처1](%EC%BA%A1%EC%B2%981-1630680830324.PNG)
+

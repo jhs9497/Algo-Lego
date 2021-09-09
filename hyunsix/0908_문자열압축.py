@@ -1,7 +1,6 @@
 def solution(s):
     n = len(s)
-    max_count = 1e10
-    idx = 0
+    min_count = n
     if n == 1:
         return 1
     for i in range(1, n // 2 + 1):
@@ -31,7 +30,7 @@ def solution(s):
         else:
             temp_word += now_pattern
 
-        if max_count > len(temp_word):
-            max_count = len(temp_word)
+        if min_count > len(temp_word):
+            min_count = len(temp_word)
 
-    return max_count
+    return min_count

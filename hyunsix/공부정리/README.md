@@ -282,3 +282,117 @@ result1 = list(filter(is_even), range(10))
 # 람다 함수
 result2 = list(filter(lambda x : x % 2 == 0, range(10)))
 ```
+
+
+
+## 다익스트라 알고리즘 (이코테 참조)
+
+1. 출발 노드를 설정한다.
+2. 최단 거리 테이블을 초기화한다.
+   1. 자기 자신과의 거리는 0
+3. 방문하지 않은 노드 중에서 최단 거리가 가장 짧은 노드를 선택한다.
+4. 해당 노드를 거쳐 다른 노드로 가는 비용을 계산하여 최단 거리 테이블을 갱신한다.
+5. 위 과정의 3번과 4번을 반복한다.
+
+### heap자료구조를 이용하는 이유
+
+1. 단계마다 방문하지 않은 노드 중에서 최단 거리가 가장 짧은 노드를 선택하기 위해 힙(Heap) 자료구조를 이용한다.
+2. 다익스크라 알고리즘이 동작하는 기본 원리는 동일하다.
+   - 현재 가장 가까운 노드를 저장해 놓기 위해서 힙 자료구졸르 추가적으로 이용한다는 점이 다르다.
+   - 현재의 최단 거리가 가장 짧은 노드를 선택해야 하므로 최소 힙을 사용한다.
+
+
+
+```python
+import heapq
+
+INF = 1e9
+
+# 노드의 개수, 간선의 개수 입력받기
+n, m = map(int, input().split())
+# 시작 노드 번호 입력받기
+start = int(input())
+# 노드 연결 리스트 만들기
+graph = [[] for _ in range(n+1)]
+# 최단 거리 테이블 모두 무한으로 초기화해서 만들기
+distance = [INF] * (n+1)
+
+# 모든 간선 정보 graph에 반영하기
+for _ in range(m):
+    a, b, c, = map(int, input().split())
+    # a번 노드에서 b번 노드로 가는 비용이 c다.
+    graph[a].append((b,c))
+    
+    
+# 다익스트라 알고리즘
+def dijkstra(start):
+    q = []
+    # start 노드로 가기 위한 거리는 0으로 설정(자기 자신에게 가는 거리임, 우선순위 큐에 삽입)
+    heapq.heappush(q, (0, start))
+    distanch[start] = 0
+    # q가 비어있기 전 까지 진행
+    while q:
+        # 현재 가장 짧은 거리의 노드정보 꺼내기
+        dist, node = heapq.heappop(q)
+        # 현재 노드의 거리가 방금 꺼낸 dist보다 작다는건 탐색할 필요가 없다는 뜻이므로 continue로 무시
+        if distance[now] < dist:
+            continue
+           
+        # 현재 노드와 연결된 다른 인접한 노드들 확인
+        for i in graph[now]:
+            cost = dist + i[1]
+            # 현재 노드를 거쳐서, 다른 노드로 이동하는 거리가 더 짧은 경우 
+            if cost < distance[i[0]]:
+                distance[i[0]] = cost
+                heapq.heappush(cost, i[0])
+
+# 다익스트라 수행                
+dijkstra(start)
+
+# distance안에 start노드 기준 모든 노드로 가는 최단거리 들어있음 
+    
+```
+
+
+
+### 프로그래머스 가장 먼 노드 풀이
+
+```python
+import heapq
+
+def solution(n, edge):
+    INF = 1e9
+    graph = [[] for _ in range(n+1)]
+    distance = [INF] * (n+1)
+    for start, end in edge:
+        graph[start].append((end, 1))
+        graph[end].append((start, 1))
+        
+    def dijkstra(start):
+        q = []
+        distance[start] = 0
+        heapq.heappush(q, (0, start))
+        while q:
+            dist, now_node = heapq.heappop(q)
+            if distance[now_node] < dist:
+                continue
+            
+            for i in graph[now_node]:
+                cost = dist + i[1]
+                if distance[i[0]] > cost:
+                    distance[i[0]] = cost
+                    heapq.heappush(q, (cost, i[0]))
+                    
+    dijkstra(1)
+    
+    distance.pop(0)
+    
+    max_d = max(distance)
+    answer = 0
+    for d in distance:
+        if max_d == d:
+            answer += 1
+    
+    return answer
+```
+

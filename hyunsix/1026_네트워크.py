@@ -1,6 +1,5 @@
 def solution(n, computers):
     visited = [False] * n
-
     def check(start, network):
         visited[start] = True
         Q = []
@@ -19,7 +18,6 @@ def solution(n, computers):
     for i in range(len(computers)):
         if visited[i] == False:
             new_network = check(i, [i])
-            new_network.sort()
             networks.append(new_network)
 
     answer = len(networks)

@@ -396,3 +396,122 @@ def solution(n, edge):
     return answer
 ```
 
+```python
+{'*': 0, '+': 1, '-': 2}
+['100', '200', '*', '300', '500', '+', '20', '-']
+{'*': 0, '-': 1, '+': 2}
+['100', '200', '*', '300', '500', '-', '20', '+']
+{'+': 0, '*': 1, '-': 2}
+['100', '200', '*', '300', '500', '+', '20', '-']
+{'+': 0, '-': 1, '*': 2}
+['100', '200', '-', '300', '-', '500', '+', '20', '*']
+{'-': 0, '*': 1, '+': 2}
+['100', '200', '-', '300', '-', '500', '*', '20', '+']
+{'-': 0, '+': 1, '*': 2}
+['100', '200', '-', '300', '-', '500', '+', '20', '*']
+```
+
+```python
+from itertools import permutations
+
+def calculate(num2, num1, operator): 
+    if operator == '*': return num1*num2 
+    elif operator == '+': return num1+num2 
+    else: return num1-num2
+
+
+
+
+def solution(expression):
+    expr_list = []
+    N = ""
+    for e in expression:
+        if e.isdigit():
+            N += e
+        else:
+            expr_list.append(N)
+            N = ""
+            expr_list.append(e)
+    expr_list.append(N)  
+            
+    operations = ["*", "+", "-"]
+    operation_list = list(permutations(operations, 3))
+    for operation in operation_list:
+        
+        # 6가지 우선순위 만들기
+        operation_dict = {}
+        for i in range(len(operation)):
+            operation_dict[operation[i]] = i
+        postfix = []
+        stack = []
+        
+        # 후위표기식으로 전환
+        for expr in expr_list:
+            if expr.isdigit():
+                postfix.append(expr)
+            else:
+                if len(stack) == 0:
+                    stack.append(expr)
+                else:
+                    if operation_dict[expr] < operation_dict[stack[-1]]:
+                        postfix.append(expr)
+                    elif operation_dict[expr] > operation_dict[stack[-1]]:
+                        priorN = stack.pop()
+                        postfix.append(priorN)
+                        stack.append(expr)
+        
+        while stack:
+            lastN = stack.pop()
+            postfix.append(lastN)
+        
+        print(operation_dict)
+        print(postfix)
+        
+        # 후위표기식 계산
+        # stack = []
+        # for x in postfix:
+        #     if type(x) == int:
+        #         stack.append(x)
+        #     else:
+        #         stack.append(calculate(stack.pop(), stack.pop(), x))
+        # print(stack[0])
+        
+    answer = 0
+    return answer
+```
+
+```python
+from itertools import permutations 
+
+def calculate(num2, num1, operator): 
+    if operator == '*': return num1*num2 
+    elif operator == '+': return num1+num2 
+    else: return num1-num2 
+    
+def solution(expression): answer = 0 temp = ['*', '+', '-']
+    for operator in permutations(temp):
+        postfix = [] stack = [] num = '' 
+        for s in expression: 
+            if s.isnumeric(): num += s else: 
+                    postfix.append(int(num)) num = '' 
+                    if stack:
+                        if operator.index(stack[-1]) > operator.index(s): 									stack.append(s)
+                        else: 
+                            while stack and operator.index(stack[-1]) <= operator.index(s): 												postfix.append(stack.pop()) stack.append(s) 
+                    else: stack.append(s) 
+                        
+        postfix.append(int(num))
+        
+        while stack: 
+            postfix.append(stack.pop()) 
+        stack = [] 
+        for x in postfix: 
+            if type(x) == int: 
+                stack.append(x) 
+            else: stack.append(calculate(stack.pop(), stack.pop(), x)) 
+                
+        answer = max(answer, abs(stack[0])) 
+    return answer
+
+```
+

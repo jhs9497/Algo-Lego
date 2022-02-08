@@ -1,6 +1,6 @@
 ## Counter
 
-무시무시한 친구를 알아버렸다. from collections import Counter를 통해 리스트의 요소 갯수를 바로 알아버리는 친구다.
+무시무시한 친구를 알아버렸다. from collections import Counter를 통해 리스트의 요소 갯수를 바로 알아버리는 친구다
 
 ```python
 from collections import Counter
